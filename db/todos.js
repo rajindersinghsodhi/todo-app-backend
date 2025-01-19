@@ -23,4 +23,11 @@ async function updateTodo(id, todo){
     return result.modifiedCount > 0;
 }
 
-module.exports = {addTodo, getTodos, updateTodo};
+async function deleteTodo(id){
+    const db = await connectToDatabase();
+    const collection = db.collection("todos");
+    const result = await collection.deleteOne({_id: new ObjectId(id)});
+    return result.deletedCount > 0;
+}
+
+module.exports = {addTodo, getTodos, updateTodo, deleteTodo};

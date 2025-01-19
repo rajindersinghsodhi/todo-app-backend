@@ -1,5 +1,5 @@
 const express = require('express');
-const {addTodo, getTodos, updateTodo} = require('./db/todos.js')
+const {addTodo, getTodos, updateTodo, deleteTodo} = require('./db/todos.js')
 require('dotenv').config();
 
 const app = express();
@@ -89,6 +89,31 @@ app.put('/todos/:id', async (req, res) => {
         console.log(err);
         return res.status(500).json({
             status: 'error',
+            message: 'something went wrong', 
+            error: err
+        })
+    }
+})
+
+app.delete('/todos/:id', async (req, res) => {
+    try{
+        const id = req.params;
+        const deleted = await deleteTodo(id);
+        if(deleted){
+            res.status(200).json({
+                status: 'success',
+                message: 'Deleted Todo successfully'
+            });
+        }else{
+            res.status(500).json({
+                status: 'error',
+                message: 'Failed to delete Todo'
+            })
+        }
+    }catch (err){
+        console.log(err);
+        return res.status(500).json({
+            status: 'success',
             message: 'something went wrong', 
             error: err
         })
