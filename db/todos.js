@@ -9,4 +9,11 @@ async function addTodo(todo){
     return result.acknowledged;
 }
 
-module.exports = {addTodo};
+async function getTodos(){
+    const db = await connectToDatabase();
+    const collection = db.collection("todos");
+    const todos = collection.find({}).toArray();
+    return todos;
+}
+
+module.exports = {addTodo, getTodos};
