@@ -16,4 +16,11 @@ async function getTodos(){
     return todos;
 }
 
-module.exports = {addTodo, getTodos};
+async function updateTodo(id, todo){
+    const db = await connectToDatabase();
+    const collection = db.collection("todos");
+    const result = await collection.updateOne({_id: new ObjectId(id) }, {$set: {"todo": todo}})
+    return result.modifiedCount > 0;
+}
+
+module.exports = {addTodo, getTodos, updateTodo};

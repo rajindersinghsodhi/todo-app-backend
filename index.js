@@ -1,5 +1,5 @@
 const express = require('express');
-const {addTodo, getTodos} = require('./db/todos.js')
+const {addTodo, getTodos, updateTodo} = require('./db/todos.js')
 require('dotenv').config();
 
 const app = express();
@@ -69,6 +69,31 @@ app.get('/todos', async (req, res) => {
     }
 })
 
+app.put('/todos/:id', async (req, res) => {
+    try{
+        const id = req.params;
+        const todo_data = req.body;
+        const updated = await updateTodo(id, todo_data.todo);
+
+        if(updated){
+            res.status(200).json({
+                status: 'success',
+                message: 'Updated Todo successfully'});
+        }else{
+            res.status(500).json({
+                status: 'error',
+                message: 'Failed to update Todo'
+            })
+        }
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            status: 'error',
+            message: 'something went wrong', 
+            error: err
+        })
+    }
+})
 
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);  
